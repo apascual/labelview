@@ -17,5 +17,6 @@
             <enum name="RIGHT_BOTTOM" value="4"/>
         </attr>
         <attr name="label_autosize" format="boolean"/>
+        <attr name="label_autosizeMaxTextSize" format="dimension"/>
     </declare-styleable>
 </resources>

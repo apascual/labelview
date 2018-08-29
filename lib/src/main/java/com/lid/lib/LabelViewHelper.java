@@ -26,6 +26,7 @@ public class LabelViewHelper {
     private static final int DEFAULT_STROKE_COLOR = 0xFFFFFFFF;
     private static final int DEFAULT_TEXT_COLOR = 0xFFFFFFFF;
     private static final int DEFAULT_ORIENTATION = LEFT_TOP;
+    private static final int DEFAULT_MAX_AUTOSIZE_TEXT_SIZE = 100;
 
     private int distance;
     private int height;
@@ -38,6 +39,7 @@ public class LabelViewHelper {
     private boolean visual;
     private int orientation;
     private boolean autosize;
+    private int autosizeMaxTextSize;
 
 //    private float startPosX;
 //    private float startPosY;
@@ -71,6 +73,7 @@ public class LabelViewHelper {
         visual = attributes.getBoolean(R.styleable.LabelView_label_visual, true);
         orientation = attributes.getInteger(R.styleable.LabelView_label_orientation, DEFAULT_ORIENTATION);
         autosize = attributes.getBoolean(R.styleable.LabelView_label_autosize, false);
+        autosizeMaxTextSize = attributes.getDimensionPixelSize(R.styleable.LabelView_label_autosizeMaxTextSize, dip2Px(DEFAULT_MAX_AUTOSIZE_TEXT_SIZE));
         attributes.recycle();
 
         rectPaint = new Paint();
@@ -124,7 +127,7 @@ public class LabelViewHelper {
         int tempTextSize = textSize;
 
         if(this.autosize) {
-            tempTextSize = 100;
+            tempTextSize = this.autosizeMaxTextSize;
             Paint tempTextPaint = new Paint();
             Rect tempTextBound = new Rect();
 
@@ -293,6 +296,17 @@ public class LabelViewHelper {
     public void setLabelAutosize(View view, boolean autosize) {
         if (this.autosize != autosize) {
             this.autosize= autosize;
+            view.invalidate();
+        }
+    }
+
+    public int getLabelAutosizeMaxTextSize() {
+        return px2Dip(this.autosizeMaxTextSize);
+    }
+
+    public void setLabelAutosizeMaxTextSize(View view, int autosizeMaxTextSize) {
+        if (this.autosizeMaxTextSize != autosizeMaxTextSize) {
+            this.autosizeMaxTextSize = autosizeMaxTextSize;
             view.invalidate();
         }
     }
