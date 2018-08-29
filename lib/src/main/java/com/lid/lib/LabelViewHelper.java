@@ -37,6 +37,7 @@ public class LabelViewHelper {
     private int textColor;
     private boolean visual;
     private int orientation;
+    private boolean autosize;
 
 //    private float startPosX;
 //    private float startPosY;
@@ -69,6 +70,7 @@ public class LabelViewHelper {
         textColor = attributes.getColor(R.styleable.LabelView_label_textColor, DEFAULT_TEXT_COLOR);
         visual = attributes.getBoolean(R.styleable.LabelView_label_visual, true);
         orientation = attributes.getInteger(R.styleable.LabelView_label_orientation, DEFAULT_ORIENTATION);
+        autosize = attributes.getBoolean(R.styleable.LabelView_label_autosize, false);
         attributes.recycle();
 
         rectPaint = new Paint();
@@ -115,11 +117,35 @@ public class LabelViewHelper {
         canvas.drawPath(rectPath, rectPaint);
         canvas.drawPath(rectPath, rectStrokePaint);
 
-        textPaint.setTextSize(textSize);
+        float diagonalDistance = 1.4142135f * actualDistance;
+        float diagonalHeight = this.height / 1.4142135f;
+
+        // Autosizing
+        int tempTextSize = textSize;
+
+        if(this.autosize) {
+            tempTextSize = 100;
+            Paint tempTextPaint = new Paint();
+            Rect tempTextBound = new Rect();
+
+            tempTextPaint.setDither(true);
+            tempTextPaint.setAntiAlias(true);
+            tempTextPaint.setStrokeJoin(Paint.Join.ROUND);
+            tempTextPaint.setStrokeCap(Paint.Cap.SQUARE);
+
+            do {
+                tempTextSize--;
+                tempTextPaint.setTextSize(tempTextSize);
+                tempTextPaint.getTextBounds(text, 0, text.length(), tempTextBound);
+            } while ((tempTextBound.width() > actualDistance || tempTextBound.height() > (diagonalHeight - this.strokeWidth)) && tempTextSize > 0);
+
+        }
+
+        textPaint.setTextSize(tempTextSize);
         textPaint.setColor(textColor);
         textPaint.getTextBounds(text, 0, text.length(), textBound);
 
-        float begin_w_offset = (1.4142135f * actualDistance) / 2 - textBound.width() / 2;
+        float begin_w_offset = diagonalDistance / 2 - textBound.width() / 2;
         if (begin_w_offset < 0) begin_w_offset = 0;
 
         canvas.drawTextOnPath(text, textPath, begin_w_offset, textBound.height() / 2, textPaint);
@@ -256,6 +282,17 @@ public class LabelViewHelper {
     public void setLabelOrientation(View view, int orientation) {
         if (this.orientation != orientation && orientation <= 4 && orientation >= 1) {
             this.orientation = orientation;
+            view.invalidate();
+        }
+    }
+
+    public boolean isLabelAutosize() {
+        return autosize;
+    }
+
+    public void setLabelAutosize(View view, boolean autosize) {
+        if (this.autosize != autosize) {
+            this.autosize= autosize;
             view.invalidate();
         }
     }

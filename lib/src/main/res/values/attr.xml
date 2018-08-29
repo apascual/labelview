@@ -16,5 +16,6 @@
             <enum name="LEFT_BOTTOM" value="3"/>
             <enum name="RIGHT_BOTTOM" value="4"/>
         </attr>
+        <attr name="label_autosize" format="boolean"/>
     </declare-styleable>
 </resources>
