@@ -137,7 +137,7 @@ public class LabelViewHelper {
                 tempTextSize--;
                 tempTextPaint.setTextSize(tempTextSize);
                 tempTextPaint.getTextBounds(text, 0, text.length(), tempTextBound);
-            } while ((tempTextBound.width() > actualDistance || tempTextBound.height() > (diagonalHeight - this.strokeWidth)) && tempTextSize > 0);
+            } while ((tempTextBound.width() > actualDistance || tempTextBound.height() > 0.8f * (diagonalHeight - this.strokeWidth)) && tempTextSize > 0);
 
         }
 
